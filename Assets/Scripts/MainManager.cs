@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -15,6 +16,9 @@ public class MainManager : MonoBehaviour
     
     private bool m_Started = false;
     private int m_Points;
+
+    string playerName;
+    [SerializeField] Text topScoreText;
     
     private bool m_GameOver = false;
 
@@ -22,6 +26,10 @@ public class MainManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        playerName = GameManager.Instance.currPlayerName;
+
+        topScoreText.text = "Top Score: " + GameManager.Instance.highScore + " by " + GameManager.Instance.highScorePlayerName;
+
         const float step = 0.6f;
         int perLine = Mathf.FloorToInt(4.0f / step);
         
@@ -71,6 +79,13 @@ public class MainManager : MonoBehaviour
     public void GameOver()
     {
         m_GameOver = true;
+        GameManager.Instance.UpdateHighScore(m_Points, playerName);
+        topScoreText.text = "Top Score: " + GameManager.Instance.highScore + " by " + GameManager.Instance.highScorePlayerName;
         GameOverText.SetActive(true);
+    }
+
+    public void QuitGame()
+    {
+        SceneManager.LoadScene(0);
     }
 }
